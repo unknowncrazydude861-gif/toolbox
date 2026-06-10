@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToolKit Pro - Professional Worldwide Utility Tools</title>
+    <meta name="description" content="Hundreds of fast, modern, and free utility tools including calculators, text formatters, image editors, and developer tools.">
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#eff6ff', 100: '#dbeafe', 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom scrollbar and transitions */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+        
+        .fade-in { animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-200 min-h-screen flex flex-col font-sans">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2"></div>
+
+    <!-- Navigation Bar -->
+    <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="navigateTo('home')">
+                    <svg class="h-8 w-8 text-primary-600 dark:text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    <span class="ml-2 text-xl font-bold tracking-tight">ToolKit<span class="text-primary-600 dark:text-primary-500">Pro</span></span>
+                </div>
+
+                <!-- Global Search -->
+                <div class="flex-1 max-w-lg mx-8 hidden sm:block">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </div>
+                        <input type="text" id="global-search" class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-xl leading-5 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 sm:text-sm transition-all" placeholder="Search for tools (e.g., PDF, JSON, BMI)...">
+                    </div>
+                </div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-4">
+                    <button id="theme-toggle" class="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white rounded-lg focus:outline-none">
+                        <!-- Sun Icon -->
+                        <svg id="theme-icon-light" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                        <!-- Moon Icon -->
+                        <svg id="theme-icon-dark" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    </button>
+                    <button class="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-xl text-sm font-medium transition-colors hidden sm:block">Sign In</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- ================= HOME PAGE VIEW ================= -->
+        <div id="view-home" class="fade-in block">
+            <!-- Hero Section -->
+            <div class="text-center py-10 sm:py-16">
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                    Every tool you need, <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-blue-400">in one place.</span>
+                </h1>
+                <p class="mt-4 max-w-2xl text-lg text-gray-500 dark:text-gray-400 mx-auto">
+                    Fast, secure, and fully responsive utilities designed for developers, students, and professionals.
+                </p>
+            </div>
+
+            <!-- Categories -->
+            <div class="flex overflow-x-auto pb-4 mb-6 gap-3 no-scrollbar" id="category-filters">
+                <button class="category-btn active px-4 py-2 rounded-full bg-gray-900 text-white dark:bg-white dark:text-gray-900 text-sm font-medium whitespace-nowrap" data-category="All">All Tools</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 text-sm font-medium whitespace-nowrap transition-colors" data-category="Text">Text Tools</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 text-sm font-medium whitespace-nowrap transition-colors" data-category="Developer">Developer</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 text-sm font-medium whitespace-nowrap transition-colors" data-category="Health">Health</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 text-sm font-medium whitespace-nowrap transition-colors" data-category="Finance">Finance</button>
+                <button class="category-btn px-4 py-2 rounded-full bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 text-sm font-medium whitespace-nowrap transition-colors" data-category="Image">Image</button>
+            </div>
+
+            <!-- Tool Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="tools-grid">
+                <!-- Tool cards injected by JS -->
+            </div>
+        </div>
+
+        <!-- ================= TOOL PAGE VIEW ================= -->
+        <div id="view-tool" class="fade-in hidden max-w-4xl mx-auto">
+            <button onclick="navigateTo('home')" class="mb-6 flex items-center text-sm font-medium text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
+                <svg class="mr-2 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                Back to Tools
+            </button>
+
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 md:p-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-4">
+                        <div id="tool-view-icon" class="w-12 h-12 flex items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-gray-700 dark:text-primary-400">
+                            <!-- Icon injected by JS -->
+                        </div>
+                        <div>
+                            <h2 id="tool-view-title" class="text-2xl font-bold text-gray-900 dark:text-white">Tool Title</h2>
+                            <p id="tool-view-category" class="text-sm text-primary-600 dark:text-primary-400 font-medium">Category</p>
+                        </div>
+                    </div>
+                    <button id="favorite-btn" class="p-2 text-gray-400 hover:text-red-500 transition-colors" onclick="toggleFavorite()">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+                    </button>
+                </div>
+                
+                <p id="tool-view-desc" class="text-gray-600 dark:text-gray-300 mb-8 pb-6 border-b border-gray-100 dark:border-gray-700">Tool description goes here.</p>
+
+                <!-- Tool specific workspace injected here -->
+                <div id="tool-workspace" class="min-h-[300px]">
+                    <!-- Dynamic Tool Content -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+            <p>&copy; 2026 ToolKit Pro. All rights reserved.</p>
+            <div class="mt-4 flex justify-center gap-4">
+                <a href="#" class="hover:text-primary-600">Privacy Policy</a>
+                <a href="#" class="hover:text-primary-600">Terms of Service</a>
+                <a href="#" class="hover:text-primary-600">Request a Tool</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- App Logic -->
+    <script>
+        // --- 1. STATE & DATA ---
+        let currentView = 'home';
+        let currentToolId = null;
+        let isDark = false;
+        let favorites = new Set(); // In-memory session state
+        
+        // Reusable SVG Icons
+        const icons = {
+            text: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>`,
+            lock: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>`,
+            code: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" /></svg>`,
+            health: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>`,
+            calendar: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`,
+            calc: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>`,
+            money: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>`,
+            image: `<svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>`
+        };
+
+        // Tool Database (Easily scales to 500+)
+        const toolsDatabase = [
+            { id: 'word-counter', name: 'Word Counter', category: 'Text', desc: 'Count words, characters, sentences, and paragraphs in real-time.', icon: icons.text, render: renderWordCounter },
+            { id: 'password-gen', name: 'Password Generator', category: 'Developer', desc: 'Create strong, secure, and customizable passwords instantly.', icon: icons.lock, render: renderPasswordGen },
+            { id: 'json-formatter', name: 'JSON Formatter', category: 'Developer', desc: 'Format, validate, and beautify your JSON data.', icon: icons.code, render: renderJsonFormatter },
+            { id: 'bmi-calculator', name: 'BMI Calculator', category: 'Health', desc: 'Calculate your Body Mass Index (BMI) accurately.', icon: icons.health, render: renderBmiCalculator },
+            { id: 'age-calculator', name: 'Age Calculator', category: 'Health', desc: 'Calculate exact age in years, months, and days.', icon: icons.calendar, render: renderAgeCalculator },
+            { id: 'percentage-calc', name: 'Percentage Calculator', category: 'Finance', desc: 'Easily calculate percentages for various scenarios.', icon: icons.calc, render: renderComingSoon },
+            { id: 'loan-calc', name: 'Loan Calculator', category: 'Finance', desc: 'Estimate loan payments and interest rates.', icon: icons.money, render: renderComingSoon },
+            { id: 'image-resizer', name: 'Image Resizer', category: 'Image', desc: 'Resize images securely right in your browser.', icon: icons.image, render: renderComingSoon }
+        ];
+
+        // --- 2. CORE UTILITIES ---
+        
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            const bg = type === 'success' ? 'bg-green-500' : (type === 'error' ? 'bg-red-500' : 'bg-blue-500');
+            toast.className = `${bg} text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-2 transform transition-all duration-300 translate-y-10 opacity-0`;
+            toast.innerHTML = `<span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => { toast.classList.remove('translate-y-10', 'opacity-0'); }, 10);
+            
+            // Animate out and remove
+            setTimeout(() => {
+                toast.classList.add('opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function copyToClipboard(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy'); // Fallback for maximum iframe compatibility
+            document.body.removeChild(textarea);
+            showToast('Copied to clipboard!', 'success');
+        }
+
+        function toggleTheme() {
+            isDark = !isDark;
+            const html = document.documentElement;
+            const lightIcon = document.getElementById('theme-icon-light');
+            const darkIcon = document.getElementById('theme-icon-dark');
+            
+            if (isDark) {
+                html.classList.add('dark');
+                lightIcon.classList.remove('hidden');
+                darkIcon.classList.add('hidden');
+            } else {
+                html.classList.remove('dark');
+                lightIcon.classList.add('hidden');
+                darkIcon.classList.remove('hidden');
+            }
+        }
+
+        function toggleFavorite() {
+            const btn = document.getElementById('favorite-btn');
+            if (favorites.has(currentToolId)) {
+                favorites.delete(currentToolId);
+                btn.classList.remove('text-red-500');
+                btn.classList.add('text-gray-400');
+                showToast('Removed from favorites');
+            } else {
+                favorites.add(currentToolId);
+                btn.classList.remove('text-gray-400');
+                btn.classList.add('text-red-500');
+                showToast('Added to favorites!', 'success');
+            }
+        }
+
+        // --- 3. ROUTING & RENDERING ---
+        
+        function navigateTo(view, params = {}) {
+            // Hide all views
+            document.getElementById('view-home').classList.add('hidden');
+            document.getElementById('view-tool').classList.add('hidden');
+            
+            // Scroll to top
+            window.scrollTo(0,0);
+
+            switch(view) {
+                case 'home':
+                    document.getElementById('view-home').classList.remove('hidden');
+                    currentView = 'home';
+                    currentToolId = null;
+                    if(params.query) {
+                        document.getElementById('global-search').value = params.query;
+                        filterGrid(params.query, 'All');
+                    }
+                    break;
+                case 'tool':
+                    document.getElementById('view-tool').classList.remove('hidden');
+                    currentView = 'tool';
+                    loadTool(params.id);
+                    break;
+            }
+        }
+
+        function renderGrid(toolsList) {
+            const grid = document.getElementById('tools-grid');
+            grid.innerHTML = '';
+            
+            if(toolsList.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500">No tools found matching your criteria.</div>`;
+                return;
+            }
+
+            toolsList.forEach(tool => {
+                const card = document.createElement('div');
+                card.className = "bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 flex flex-col hover:shadow-md transition-all cursor-pointer group";
+                card.onclick = () => navigateTo('tool', {id: tool.id});
+                
+                card.innerHTML = `
+                    <div class="w-12 h-12 flex items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-gray-700 dark:text-primary-400 mb-4 group-hover:scale-110 transition-transform">
+                        ${tool.icon}
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">${tool.name}</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 flex-grow mb-4">${tool.desc}</p>
+                    <div class="mt-auto flex items-center text-sm font-medium text-primary-600 dark:text-primary-400">
+                        Use Tool <svg class="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterGrid(searchQuery = '', category = 'All') {
+            const filtered = toolsDatabase.filter(tool => {
+                const matchesSearch = tool.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                                      tool.desc.toLowerCase().includes(searchQuery.toLowerCase());
+                const matchesCategory = category === 'All' || tool.category === category;
+                return matchesSearch && matchesCategory;
+            });
+            renderGrid(filtered);
+        }
+
+        function loadTool(id) {
+            const tool = toolsDatabase.find(t => t.id === id);
+            if (!tool) { navigateTo('home'); return; }
+            
+            currentToolId = id;
+            
+            // Populate Header
+            document.getElementById('tool-view-icon').innerHTML = tool.icon;
+            document.getElementById('tool-view-title').textContent = tool.name;
+            document.getElementById('tool-view-category').textContent = tool.category;
+            document.getElementById('tool-view-desc').textContent = tool.desc;
+            
+            // Set favorite state
+            const favBtn = document.getElementById('favorite-btn');
+            if(favorites.has(id)) {
+                favBtn.classList.remove('text-gray-400');
+                favBtn.classList.add('text-red-500');
+            } else {
+                favBtn.classList.add('text-gray-400');
+                favBtn.classList.remove('text-red-500');
+            }
+
+            // Render Tool Workspace
+            const workspace = document.getElementById('tool-workspace');
+            workspace.innerHTML = ''; 
+            tool.render(workspace); // Call the specific render function
+        }
+
+
+        // --- 4. TOOL IMPLEMENTATIONS (CLIENT-SIDE) ---
+        
+        function renderComingSoon(container) {
+            container.innerHTML = `
+                <div class="text-center py-12">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-white">Under Construction</h3>
+                    <p class="mt-2 text-sm text-gray-500">This tool is currently being upgraded for better performance. Check back soon!</p>
+                </div>
+            `;
+        }
+
+        function renderWordCounter(container) {
+            container.innerHTML = `
+                <div class="flex flex-col gap-4">
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl text-center">
+                            <span class="block text-3xl font-bold text-primary-600 dark:text-primary-400" id="wc-words">0</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-300">Words</span>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl text-center">
+                            <span class="block text-3xl font-bold text-primary-600 dark:text-primary-400" id="wc-chars">0</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-300">Characters</span>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl text-center">
+                            <span class="block text-3xl font-bold text-primary-600 dark:text-primary-400" id="wc-sentences">0</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-300">Sentences</span>
+                        </div>
+                        <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-xl text-center">
+                            <span class="block text-3xl font-bold text-primary-600 dark:text-primary-400" id="wc-paragraphs">0</span>
+                            <span class="text-sm text-gray-500 dark:text-gray-300">Paragraphs</span>
+                        </div>
+                    </div>
+                    <textarea id="wc-input" class="w-full h-64 p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-y" placeholder="Type or paste your text here..."></textarea>
+                    <div class="flex justify-end gap-2">
+                        <button id="wc-clear" class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 rounded-xl transition-colors">Clear</button>
+                    </div>
+                </div>
+            `;
+
+            const input = document.getElementById('wc-input');
+            const clearBtn = document.getElementById('wc-clear');
+            
+            const updateCounts = () => {
+                const text = input.value;
+                document.getElementById('wc-chars').textContent = text.length;
+                document.getElementById('wc-words').textContent = text.trim() ? text.trim().split(/\s+/).length : 0;
+                document.getElementById('wc-sentences').textContent = text.trim() ? (text.match(/[^\.!\?]+[\.!\?]+/g) || []).length : 0;
+                document.getElementById('wc-paragraphs').textContent = text.trim() ? text.split(/\n+/).filter(p => p.trim().length > 0).length : 0;
+            };
+
+            input.addEventListener('input', updateCounts);
+            clearBtn.addEventListener('click', () => { input.value = ''; updateCounts(); });
+        }
+
+        function renderPasswordGen(container) {
+            container.innerHTML = `
+                <div class="max-w-xl mx-auto space-y-6">
+                    <div class="relative">
+                        <input type="text" id="pg-output" readonly class="w-full text-center text-2xl font-mono p-4 pr-12 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none">
+                        <button id="pg-copy" class="absolute right-3 top-1/2 transform -translate-y-1/2 p-2 text-gray-500 hover:text-primary-600 dark:text-gray-400 dark:hover:text-primary-400 transition-colors">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4 bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 rounded-xl">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Password Length: <span id="pg-length-val">16</span></label>
+                            </div>
+                            <input type="range" id="pg-length" min="8" max="64" value="16" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-primary-600">
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mt-6">
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="pg-upper" checked class="w-5 h-5 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                                <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">Uppercase (A-Z)</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="pg-lower" checked class="w-5 h-5 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                                <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">Lowercase (a-z)</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="pg-numbers" checked class="w-5 h-5 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                                <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">Numbers (0-9)</span>
+                            </label>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="pg-symbols" checked class="w-5 h-5 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                                <span class="text-gray-700 dark:text-gray-300 text-sm font-medium">Symbols (!@#$)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button id="pg-generate" class="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-sm transition-colors text-lg">
+                        Generate New Password
+                    </button>
+                </div>
+            `;
+
+            const output = document.getElementById('pg-output');
+            const lengthSlider = document.getElementById('pg-length');
+            const lengthVal = document.getElementById('pg-length-val');
+            
+            const generatePassword = () => {
+                const length = parseInt(lengthSlider.value);
+                const hasUpper = document.getElementById('pg-upper').checked;
+                const hasLower = document.getElementById('pg-lower').checked;
+                const hasNums = document.getElementById('pg-numbers').checked;
+                const hasSyms = document.getElementById('pg-symbols').checked;
+                
+                let charset = "";
+                if (hasUpper) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+                if (hasLower) charset += "abcdefghijklmnopqrstuvwxyz";
+                if (hasNums) charset += "0123456789";
+                if (hasSyms) charset += "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+                
+                if (charset === "") {
+                    output.value = "Select at least one option";
+                    return;
+                }
+                
+                let password = "";
+                // Ensure at least one of each selected type
+                if(hasUpper) password += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"[Math.floor(Math.random() * 26)];
+                if(hasLower) password += "abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 26)];
+                if(hasNums) password += "0123456789"[Math.floor(Math.random() * 10)];
+                if(hasSyms) password += "!@#$%^&*()_+~`|}{[]:;?><,./-="[Math.floor(Math.random() * 29)];
+
+                for (let i = password.length; i < length; ++i) {
+                    password += charset[Math.floor(Math.random() * charset.length)];
+                }
+                
+                // Shuffle
+                password = password.split('').sort(() => 0.5 - Math.random()).join('');
+                output.value = password;
+            };
+
+            lengthSlider.addEventListener('input', (e) => {
+                lengthVal.textContent = e.target.value;
+                generatePassword();
+            });
+
+            document.getElementById('pg-generate').addEventListener('click', generatePassword);
+            document.getElementById('pg-copy').addEventListener('click', () => copyToClipboard(output.value));
+            
+            // Generate initial
+            generatePassword();
+        }
+
+        function renderJsonFormatter(container) {
+            container.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-[500px]">
+                    <div class="flex flex-col h-full">
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Input JSON</label>
+                        <textarea id="json-input" class="flex-grow p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 font-mono text-sm resize-none" placeholder='{"key": "value"}'></textarea>
+                    </div>
+                    <div class="flex flex-col h-full relative">
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 flex justify-between">
+                            Formatted Output
+                            <button id="json-copy" class="text-primary-600 hover:text-primary-700 dark:text-primary-400 text-xs flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Copy
+                            </button>
+                        </label>
+                        <textarea id="json-output" readonly class="flex-grow p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-green-400 focus:outline-none font-mono text-sm resize-none"></textarea>
+                    </div>
+                </div>
+                <div class="mt-4 flex gap-2">
+                    <button id="json-format" class="px-6 py-2 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-xl transition-colors">Format / Beautify</button>
+                    <button id="json-minify" class="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-xl transition-colors">Minify</button>
+                </div>
+            `;
+
+            const input = document.getElementById('json-input');
+            const output = document.getElementById('json-output');
+
+            const processJson = (space) => {
+                try {
+                    const parsed = JSON.parse(input.value);
+                    output.value = JSON.stringify(parsed, null, space);
+                    output.classList.remove('text-red-500');
+                    if(document.documentElement.classList.contains('dark')) {
+                         output.classList.add('dark:text-green-400');
+                    }
+                } catch (e) {
+                    output.value = "Invalid JSON:\n" + e.message;
+                    output.classList.add('text-red-500');
+                    output.classList.remove('dark:text-green-400');
+                }
+            };
+
+            document.getElementById('json-format').addEventListener('click', () => processJson(4));
+            document.getElementById('json-minify').addEventListener('click', () => processJson(0));
+            document.getElementById('json-copy').addEventListener('click', () => copyToClipboard(output.value));
+        }
+
+        function renderBmiCalculator(container) {
+            container.innerHTML = `
+                <div class="max-w-md mx-auto space-y-6 bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Weight (kg)</label>
+                        <input type="number" id="bmi-weight" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500" placeholder="e.g., 70">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Height (cm)</label>
+                        <input type="number" id="bmi-height" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500" placeholder="e.g., 175">
+                    </div>
+                    <button id="bmi-calc-btn" class="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-sm transition-colors text-lg">Calculate BMI</button>
+                    
+                    <div id="bmi-result-card" class="hidden mt-6 p-6 rounded-xl text-center">
+                        <div class="text-sm text-gray-600 dark:text-gray-300 mb-1">Your BMI is</div>
+                        <div id="bmi-score" class="text-5xl font-black mb-2">24.5</div>
+                        <div id="bmi-category" class="text-lg font-medium uppercase tracking-wide">Normal Weight</div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('bmi-calc-btn').addEventListener('click', () => {
+                const w = parseFloat(document.getElementById('bmi-weight').value);
+                const h = parseFloat(document.getElementById('bmi-height').value) / 100; // cm to m
+                
+                if(!w || !h || w <= 0 || h <= 0) {
+                    showToast('Please enter valid numbers', 'error');
+                    return;
+                }
+
+                const bmi = (w / (h * h)).toFixed(1);
+                const resultCard = document.getElementById('bmi-result-card');
+                const scoreEl = document.getElementById('bmi-score');
+                const catEl = document.getElementById('bmi-category');
+
+                scoreEl.textContent = bmi;
+                resultCard.classList.remove('hidden', 'bg-blue-100', 'bg-green-100', 'bg-yellow-100', 'bg-red-100', 'dark:bg-blue-900', 'dark:bg-green-900', 'dark:bg-yellow-900', 'dark:bg-red-900');
+                
+                let cat = '', colorClass = '', darkColorClass = '';
+                if (bmi < 18.5) { cat = 'Underweight'; colorClass = 'bg-blue-100 text-blue-800'; darkColorClass = 'dark:bg-blue-900/50 dark:text-blue-300'; }
+                else if (bmi < 24.9) { cat = 'Normal Weight'; colorClass = 'bg-green-100 text-green-800'; darkColorClass = 'dark:bg-green-900/50 dark:text-green-300'; }
+                else if (bmi < 29.9) { cat = 'Overweight'; colorClass = 'bg-yellow-100 text-yellow-800'; darkColorClass = 'dark:bg-yellow-900/50 dark:text-yellow-300'; }
+                else { cat = 'Obese'; colorClass = 'bg-red-100 text-red-800'; darkColorClass = 'dark:bg-red-900/50 dark:text-red-300'; }
+
+                catEl.textContent = cat;
+                resultCard.className = `mt-6 p-6 rounded-xl text-center fade-in ${colorClass} ${darkColorClass}`;
+            });
+        }
+
+        function renderAgeCalculator(container) {
+            container.innerHTML = `
+                <div class="max-w-md mx-auto space-y-6 bg-white dark:bg-gray-800 p-6 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date of Birth</label>
+                        <input type="date" id="age-dob" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500">
+                    </div>
+                    <button id="age-calc-btn" class="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl shadow-sm transition-colors text-lg">Calculate Exact Age</button>
+                    
+                    <div id="age-result" class="hidden mt-6 text-center space-y-2">
+                        <div class="text-lg text-gray-700 dark:text-gray-300">You are exactly</div>
+                        <div class="text-3xl font-bold text-primary-600 dark:text-primary-400" id="age-y">0 Years</div>
+                        <div class="text-xl font-medium text-gray-600 dark:text-gray-400" id="age-m-d">0 Months, 0 Days</div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('age-calc-btn').addEventListener('click', () => {
+                const dobInput = document.getElementById('age-dob').value;
+                if(!dobInput) { showToast('Please select a date of birth', 'error'); return; }
+
+                const dob = new Date(dobInput);
+                const today = new Date();
+                
+                if(dob > today) { showToast('Date of birth cannot be in the future', 'error'); return; }
+
+                let years = today.getFullYear() - dob.getFullYear();
+                let months = today.getMonth() - dob.getMonth();
+                let days = today.getDate() - dob.getDate();
+
+                if (days < 0) {
+                    months--;
+                    // Get days in previous month
+                    const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                    days += prevMonth.getDate();
+                }
+                
+                if (months < 0) {
+                    years--;
+                    months += 12;
+                }
+
+                document.getElementById('age-y').textContent = `${years} Years`;
+                document.getElementById('age-m-d').textContent = `${months} Months, ${days} Days`;
+                document.getElementById('age-result').classList.remove('hidden');
+                document.getElementById('age-result').classList.add('fade-in');
+            });
+        }
+
+
+        // --- 5. INITIALIZATION ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme setup
+            document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+            
+            // Search setup
+            document.getElementById('global-search').addEventListener('input', (e) => {
+                if(currentView !== 'home') navigateTo('home');
+                filterGrid(e.target.value, document.querySelector('.category-btn.active').dataset.category);
+            });
+
+            // Category filters
+            const catButtons = document.querySelectorAll('.category-btn');
+            catButtons.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Update active state styling
+                    catButtons.forEach(b => {
+                        b.classList.remove('bg-gray-900', 'text-white', 'dark:bg-white', 'dark:text-gray-900');
+                        b.classList.add('bg-gray-200', 'text-gray-700', 'dark:bg-gray-800', 'dark:text-gray-300');
+                        b.classList.remove('active');
+                    });
+                    const target = e.target;
+                    target.classList.add('bg-gray-900', 'text-white', 'dark:bg-white', 'dark:text-gray-900', 'active');
+                    target.classList.remove('bg-gray-200', 'text-gray-700', 'dark:bg-gray-800', 'dark:text-gray-300');
+                    
+                    filterGrid(document.getElementById('global-search').value, target.dataset.category);
+                });
+            });
+
+            // Initial render
+            renderGrid(toolsDatabase);
+        });
+
+    </script>
+</body>
+</html>
